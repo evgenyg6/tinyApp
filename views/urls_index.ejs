@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+  <% include ./partials/_header.ejs %>
+</head>
+<body>
+    <div style="background-color: #5592a0; font-size:16px; padding:50px;"><h1><strong>The following is a list of URLs and their shortened forms: </strong></h1>
+     <ul>
+        <% for(keys in urls) { %>
+        <li><%= keys %> - <%= urls[keys] %></li>
+        <% }; %>
+    </ul>
+      <h4>Click <a href = "http://localhost:8080/urls/new">here </a> to shorten your link!</h2>
+    </div>
+</body>
+</html>
+
+
