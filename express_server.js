@@ -38,21 +38,37 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 //////////////////////////////////////////////
-app.get("/urls/:id", (req, res) => {
-    let templateVars = {
-      urls: urlDatabase,
-      shortURL: req.params.id
-    };
-  })
-  //////////////////////////////////////////////
-app.post("/urls", (req, res) => {
+app.post("/urls/:id", (req, res) => { //redirects to URL whith short ID
+  let templateVars = {
+    urls: urlDatabase,
+    shortURL: req.params.id
+  };
+  res.render("urls_show", templateVars);
+});
+//////////////////////////////////////////////
+app.post("/urls/:id/update", (req, res) => { //redirects to page to allow to edit ID
+  if (Object.keys(urlDatabase).indexOf(req.params.id) > -1) {
+    urlDatabase[req.params.id] = req.body.longURL;
+    res.redirect("/urls");
+  } else {
+    res.redirect("/urls");
+  }
+});
+//////////////////////////////////////////////
+app.post("/urls", (req, res) => { //returns a generated shortURL
   let arrt = generateRandomString();
   //console.log(req.body); // debug statement to see POST parameters
   urlDatabase[arrt] = req.body.longURL;
-  var linkName = "Click here for your generated link!";
-  res.send(arrt + ' ' + linkName.link(urlDatabase[arrt]));
-  //console.log(urlDatabase);
+  var linkName = "Here is your generated link: localhost:8080/u/" + arrt;
+  res.send(linkName.link(urlDatabase[arrt]));
   //res.render("urls_show", templateVars);
+});
+//////////////////////////////////////////////
+app.post("/urls/:id/delete", (req, res) => { //deletes the generated shortURL
+  if (Object.keys(urlDatabase).indexOf(req.params.id) > -1) {
+    delete urlDatabase[req.params.id];
+    res.redirect("/urls");
+  }
 });
 //////////////////////////////////////////////
 app.listen(PORT, () => {

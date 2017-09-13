@@ -3,13 +3,67 @@
 <head>
   <title>TinyApp, you've never seen anything like it!</title>
   <% include ./partials/_header.ejs %>
-</head>
-  <body style="font-size:20px; padding:50px;">
+<style>
+.button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  background-color:#3375e0;
+  margin-left:1%;
+  margin-top: 0px;
+  width: 110px;
+  height: 40px;
+  border-radius: 5px;
+  color:#c8daf4;
+  font-weight: bold;
+  border: 2px solid #303844;
+  transition: all 0.1s;
+  cursor: pointer;
+}
+.button:hover{
+  background-color: #184da3;
+  color: #18bf27;
+}
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.7s;
+  color: darkblue;
+}
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.7s;
+}
+.button:hover span {
+  padding-right: 25px;
+}
 
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+.searchBar{
+  font-size: 17px;
+  width: 110px;
+
+  height: 30px;
+  border-radius: 5px;
+  font-weight: bold;
+  border: 2px solid #303844;
+}
+</style>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+  <body style="font-size:20px; padding:50px; background-color: #12825c;">
     <form action="/urls" method="POST" style="margin:150px;">
       <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
-      <input type="submit" value="Submit">
+      <input class = "searchBar" id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+       <button class="button" style="vertical-align:middle"><span>Submit </span></button>
     </form>
   </body>
 </html>

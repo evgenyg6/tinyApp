@@ -3,14 +3,68 @@
 <head>
   <title>TinyApp</title>
   <% include ./partials/_header.ejs %>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+.button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  background-color:#3375e0;
+  margin-left:1%;
+  margin-top: -10px;
+  width: 90px;
+  height: 25px;
+  border-radius: 5px;
+  color:#c8daf4;
+  font-weight: bold;
+  border: 2px solid #303844;
+  transition: all 0.1s;
+  cursor: pointer;
+}
+.button:hover{
+  background-color: #184da3;
+  color: #e01421;
+}
+.button span:after {
+  content: '\00ab';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.7s;
+  color: darkblue;
+}
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.7s;
+}
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+</style>
 </head>
 <body>
-    <div style="background-color: #5592a0; font-size:16px; padding:50px;"><h1><strong>The following is a list of URLs and their shortened forms: </strong></h1>
+    <div style="background-color: #12825c; font-size:16px; padding:50px;"><h1><strong>The following is a list of URLs and their shortened forms: </strong></h1>
      <ul>
         <% for(keys in urls) { %>
         <li><%= keys %> - <%= urls[keys] %></li>
+        <br>
+        <form method="POST" action=<%= '/urls/' + keys + '/delete'%>>
+        <button class="button" style="vertical-align:middle"><span>Delete</span></button>
+        </form>
+        <br>
+        <form method="POST" action=<%= '/urls/' + keys%>>
+        <button class="button" style="vertical-align:middle"><span>Edit</span></button>
+        </form>
         <% }; %>
-    </ul>
+      </ul>
       <h4>Click <a href = "http://localhost:8080/urls/new">here </a> to shorten your link!</h2>
     </div>
 </body>
