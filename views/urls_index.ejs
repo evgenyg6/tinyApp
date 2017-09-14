@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>TinyApp</title>
+  <title>TinyApp, you've never seen anything like it!</title>
   <% include ./partials/_header.ejs %>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+/*DELETE BUTTON*/
 .button {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 17px;
@@ -48,6 +49,50 @@
   opacity: 1;
   right: 0;
 }
+/*EDIT BUTTON*/
+.button1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  background-color:#3375e0;
+  margin-left:1%;
+  margin-top: -10px;
+  width: 90px;
+  height: 25px;
+  border-radius: 5px;
+  color:#c8daf4;
+  font-weight: bold;
+  border: 2px solid #303844;
+  transition: all 0.1s;
+  cursor: pointer;
+
+}
+.button1:hover{
+  background-color: #184da3;
+  color: #18bf27;
+}
+.button1 span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.7s;
+  color: darkblue;
+}
+.button1 span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.7s;
+}
+.button1:hover span {
+  padding-right: 25px;
+}
+
+.button1:hover span:after {
+  opacity: 1;
+  right: 0;
+}
 </style>
 </head>
 <body>
@@ -61,9 +106,9 @@
         </form>
         <br>
         <form method="POST" action=<%= '/urls/' + keys%>>
-        <button class="button" style="vertical-align:middle"><span>Edit</span></button>
+        <button class="button1" style="vertical-align:middle"><span>Edit</span></button>
         </form>
-        <% }; %>
+        <% }; %>  <!-- end of for loop to create the edit and update buttons -->
       </ul>
       <h4>Click <a href = "http://localhost:8080/urls/new">here </a> to shorten your link!</h2>
     </div>

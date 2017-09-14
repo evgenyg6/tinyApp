@@ -1,5 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <h6>This is my header, you better watch out!</h6>
-</head>
+<style>
+.username{
+  margin-left:19%;
+  margin-top: 30px;
+  width: 60x;
+  height: 20px;
+}
+</style>
+</form>
+<div><% if(username !== undefined){ %>
+   <h1><form action="/logout" method="POST" style="margin:150px;">
+      <button class="button" style="vertical-align:middle"><span>Logout</span></button></h1><h3><ul><strong>Your username is: <%= username %> </strong></ul></h3></form>
+ <% } else{ %>
+   <h1><form action="/login" method="POST" style="margin:150px;">
+      <label for="username">Enter username: </label>
+      <input class = "searchBar" id="username" type="text" name="username" placeholder="ex. joe.willy.bob" style="width: 300px">
+      <button class="button1" style="vertical-align:middle"><span>Login</span></button>
+</form></h1>
+<% } %>
+</div>

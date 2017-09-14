@@ -1,10 +1,12 @@
 var express = require("express");
+var cookieParser = require('cookie-parser');
 var app = express();
+app.use(cookieParser());
 var PORT = process.env.PORT || 8080; // default port 8080
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({
   extended: true
-}));
+})); //THE ABOVE ARE ALL THE REQUIRED LIBS
 //////////////////////////////////////////////
 app.set("view engine", "ejs"); //sets engine to ejs
 
@@ -14,7 +16,7 @@ var urlDatabase = { //object containing ID:website
 };
 //////////////////////////////////////////////
 app.get("/", (req, res) => {
-  res.end("Hello!");
+  res.redirect("/urls");
 })
 app.get("/urls.json", (req, res) => {
     res.json(urlDatabase);
@@ -22,15 +24,36 @@ app.get("/urls.json", (req, res) => {
   //////////////////////////////////////////////
 app.get("/urls", (req, res) => {
     let templateVars = {
-      urls: urlDatabase
+      urls: urlDatabase,
+      username: req.cookies.username
     };
     res.render("urls_index", templateVars);
   })
   //////////////////////////////////////////////
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  let templateVars = {
+    username: req.cookies.username
+  }
+  res.render("urls_new", templateVars);
 });
 //////////////////////////////////////////////
+app.post("/login", (req, res) => { //recieves cooking and redirects
+  res.cookie('username', req.body.username);
+  //console.log(req.cookies.username);
+  res.redirect("/urls");
+});
+//////////////////////////////////////////////
+app.post("/logout", (req, res) => { //recieves cookies and redirects
+  let templateVars = {
+      username: req.cookies.username
+    }
+    //console.log(templateVars);
+  res.clearCookie('username');
+  console.log('LOGOUT HERE GOING');
+  res.redirect("/urls");
+});
+////
+///////////////////////////////////////////////
 app.get("/u/:shortURL", (req, res) => {
 
   let longURL = urlDatabase[req.params.shortURL];
@@ -41,7 +64,8 @@ app.get("/u/:shortURL", (req, res) => {
 app.post("/urls/:id", (req, res) => { //redirects to URL whith short ID
   let templateVars = {
     urls: urlDatabase,
-    shortURL: req.params.id
+    shortURL: req.params.id,
+    username: req.cookies.username
   };
   res.render("urls_show", templateVars);
 });
@@ -64,6 +88,13 @@ app.post("/urls", (req, res) => { //returns a generated shortURL
   //res.render("urls_show", templateVars);
 });
 //////////////////////////////////////////////
+app.post("/urls", (req, res) => { //writes username cookie to server
+  let templateVars = {
+    username: req.cookies.username
+  }
+  res.cookie("username", req.body.username);
+  res.render("urls_index", templateVars);
+});
 app.post("/urls/:id/delete", (req, res) => { //deletes the generated shortURL
   if (Object.keys(urlDatabase).indexOf(req.params.id) > -1) {
     delete urlDatabase[req.params.id];
