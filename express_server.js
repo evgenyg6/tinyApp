@@ -39,17 +39,17 @@ app.get("/urls/new", (req, res) => {
 //////////////////////////////////////////////
 app.post("/login", (req, res) => { //recieves cooking and redirects
   res.cookie('username', req.body.username);
-  //console.log(req.cookies.username);
+
   res.redirect("/urls");
 });
 //////////////////////////////////////////////
 app.post("/logout", (req, res) => { //recieves cookies and redirects
   let templateVars = {
-      username: req.cookies.username
-    }
-    //console.log(templateVars);
+    username: req.cookies.username
+  }
+
   res.clearCookie('username');
-  console.log('LOGOUT HERE GOING');
+
   res.redirect("/urls");
 });
 ////
@@ -81,11 +81,9 @@ app.post("/urls/:id/update", (req, res) => { //redirects to page to allow to edi
 //////////////////////////////////////////////
 app.post("/urls", (req, res) => { //returns a generated shortURL
   let arrt = generateRandomString();
-  //console.log(req.body); // debug statement to see POST parameters
   urlDatabase[arrt] = req.body.longURL;
   var linkName = "Here is your generated link: localhost:8080/u/" + arrt;
   res.send(linkName.link(urlDatabase[arrt]));
-  //res.render("urls_show", templateVars);
 });
 //////////////////////////////////////////////
 app.post("/urls", (req, res) => { //writes username cookie to server
