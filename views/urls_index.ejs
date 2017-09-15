@@ -101,7 +101,7 @@
     <div style="background-color: #12825c; font-size:16px; padding:50px;"><h1><strong>The following is a list of URLs and their shortened forms: </strong></h1>
      <ul>
         <% for(keys in urls) { %>
-        <li><%= keys %> - <%= urls[keys] %></li>
+        <li><%= keys %> - <%= urls[keys].fullURL %></li>
         <br>
         <form method="POST" action=<%= '/urls/' + keys + '/delete'%>>
         <button class="button" style="vertical-align:middle"><span>Delete</span></button>
