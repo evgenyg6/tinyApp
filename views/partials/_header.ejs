@@ -5,16 +5,67 @@
   width: 60x;
   height: 20px;
 }
+/*REGISTER BUTTON*/
+.register {
+  position:absolute;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  background-color:#3375e0;
+  margin-left:32%;
+  margin-top: -182px;
+  width: 90px;
+  height: 25px;
+  border-radius: 5px;
+  color:#c8daf4;
+  font-weight: bold;
+  border: 2px solid #303844;
+  transition: all 0.1s;
+  cursor: pointer;
+
+}
+.register:hover{
+  background-color: #184da3;
+  color: #18bf27;
+}
+.register span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.7s;
+  color: darkblue;
+}
+.register span {
+  cursor: pointer;
+  padding-left:10px;
+  display: inline-block;
+  position: relative;
+  transition: 0.7s;
+}
+.register:hover span {
+  padding-left: 0px;
+}
+
+.register:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
 </style>
-</form>
-<div><% if(username !== undefined){ %>
-   <h1><form action="/logout" method="POST" style="margin:150px;">
-      <button class="button" style="vertical-align:middle"><span>Logout</span></button></h1><h3><ul><strong>Your username is: <%= username %> </strong></ul></h3></form>
+
+<div>
+<% if(user_id !== undefined){ %>
+   <h3><form action="/logout" method="POST" style="margin:150px;">
+      <button class="button" style="vertical-align:middle"><span>Logout</span></button></h1><h3><ul><strong>Your user_id is: <%= user_id %> </strong></ul></h3></form>
  <% } else{ %>
-   <h1><form action="/login" method="POST" style="margin:150px;">
-      <label for="username">Enter username: </label>
-      <input class = "searchBar" id="username" type="text" name="username" placeholder="ex. joe.willy.bob" style="width: 300px">
-      <button class="button1" style="vertical-align:middle"><span>Login</span></button>
-</form></h1>
+   <h3><form action="/login" method="POST" style="margin:150px;">
+      <h5>You are not currently logged in</h5>
+
+      <button class="button1" style="vertical-align:middle"><span>Login</span></button></form>
+      <form  action="/register" method="GET" >
+      <button class="login" style=""><span>Register</span></button>
+      </form>
+
 <% } %>
 </div>

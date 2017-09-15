@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <title>Tiny app, you've never seen anything like it!</title>
+  <style>
+  .login {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 75px;
+  text-align: center;
+  margin-top:15%;
+}
+.font1 {
+  margin-left:38%;
+}
+/*EDIT BUTTON*/
+.button1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  background-color:#3375e0;
+  margin-left:50%;
+  margin-top: -10px;
+  width: 90px;
+  height: 25px;
+  border-radius: 5px;
+  color:#c8daf4;
+  font-weight: bold;
+  border: 2px solid #303844;
+  transition: all 0.1s;
+  cursor: pointer;
+
+}
+.button1:hover{
+  background-color: #184da3;
+  color: #18bf27;
+}
+.button1 span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.7s;
+  color: darkblue;
+}
+.button1 span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.7s;
+}
+.button1:hover span {
+  padding-right: 25px;
+}
+
+.button1:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+<h1 class = "login">Registration Page</h1>
+
+    <form action="/register" method="POST">
+      <label class="font1" for="email" style= "color:black;"><strong>Enter a email:</strong></label>
+      <input class="email" id="email" type="email" name="email" placeholder="Username">
+    <br>
+      <label class="font1" for="password" style= "color:black;"><strong>Enter a password:</strong></label>
+      <input class="password" id="password" type="password" name="password" placeholder="Password">
+    <br>
+    <br>
+    <button class="button1" style="vertical-align:middle"><span>Register </span></button>
+    </form>
+
+
+  </body>
+</html>

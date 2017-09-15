@@ -37,12 +37,12 @@ app.get("/urls.json", (req, res) => {
 });
 //////////////////////////////////////////////
 app.get("/urls", (req, res) => {
-  let user_id = req.cookies.user_id;
-  if (user_id) {
+  let userName = req.cookies.username;
+  if (userName) {
     res.render("urls_index", {
       urls: urlDatabase,
-      user_id: user_id,
-      email: users[user_id]
+      username: userName,
+      email: users[userName]
     })
   } else {
     res.redirect("/register");
@@ -59,7 +59,7 @@ app.post("/login", (req, res) => {
 app.post("/login/success", (req, res) => {
   for (var i of Object.keys(users)) {
     if (req.body.email === users[i].email && req.body.password === users[i].password) {
-      res.cookie('user_id', i);
+      res.cookie('username', i);
       res.redirect("/urls");
     }
   }
@@ -70,7 +70,7 @@ app.post("/login/success", (req, res) => {
 });
 //////////////////////////////////////////////
 app.get("/register", (req, res) => { //renders page that includes email/password form
-  user_id = req.body.email;
+  userName = req.body.email;
   userPass = req.body.password;
   let templateVars = {
     urls: urlDatabase,
@@ -80,49 +80,49 @@ app.get("/register", (req, res) => { //renders page that includes email/password
   res.render("register", templateVars);
 });
 //////////////////////////////////////////////
-app.post("/register", (req, res) => { //takes in user_id/pass and posts them to server
-  user_id = req.body.email;
+app.post("/register", (req, res) => { //takes in username/pass and posts them to server
+  userName = req.body.email;
   userPass = req.body.password;
-  if (user_id == false || userPass == false) { //checks for no input
-    res.send("Error 400: Please enter a valid user_id/password.")
+  if (userName == false || userPass == false) { //checks for no input
+    res.send("Error 400: Please enter a valid username/password.")
   }
   console.log(users);
   for (var keys of Object.keys(users)) { //checks for existing email
-    if (user_id === users[keys].email) {
+    if (userName === users[keys].email) {
       res.send('Error 400: Please enter a non-existing email.')
-      console.log(user_id, users[keys].email);
+      console.log(userName, users[keys].email);
     } else {
       var uString = generateRandomString();
       users[uString] = {
         id: uString,
-        email: user_id,
+        email: userName,
         password: userPass
       };
     }
   };
-  res.cookie('user_id', uString);
+  res.cookie('username', uString);
   res.redirect("/urls");
 });
 //////////////////////////////////////////////
 app.get("/urls", (req, res) => {
   let templateVars = {
-    user_id: req.cookies.user_id
+    username: req.cookies.username
   }
   res.render("urls_new", templateVars);
 });
 //////////////////////////////////////////////
 app.get("/urls_new", (req, res) => {
   let templateVars = {
-    user_id: req.cookies.user_id
+    username: req.cookies.username
   }
   res.render("urls_new", templateVars);
 });
 //////////////////////////////////////////////
 app.post("/logout", (req, res) => { //recieves cookies and redirects
   let templateVars = {
-    user_id: req.cookies.user_id
+    username: req.cookies.username
   }
-  res.clearCookie('user_id');
+  res.clearCookie('username');
   res.redirect("/urls_new");
 });
 ///////////////////////////////////////////////
@@ -137,7 +137,7 @@ app.post("/urls/:id", (req, res) => { //redirects to URL whith short ID
   let templateVars = {
     urls: urlDatabase,
     shortURL: req.params.id,
-    user_id: req.cookies.user_id
+    username: req.cookies.username
   };
   res.render("urls_show", templateVars);
 });
@@ -162,11 +162,11 @@ app.post("/urls", (req, res) => { //returns a generated shortURL
 
 });
 //////////////////////////////////////////////
-app.post("/urls", (req, res) => { //writes user_id cookie to server
+app.post("/urls", (req, res) => { //writes username cookie to server
   let templateVars = {
-    user_id: req.cookies.user_id
+    username: req.cookies.username
   }
-  res.cookie("user_id", req.body.user_id);
+  res.cookie("username", req.body.username);
   res.render("urls_index", templateVars);
 });
 app.post("/urls/:id/delete", (req, res) => { //deletes the generated shortURL
