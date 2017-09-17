@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/evgenyg6/tinyApp#readme",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.1",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.7",
