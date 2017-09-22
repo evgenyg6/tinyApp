@@ -20,15 +20,6 @@ app.use(cookieSession({
     keys: ['key1', 'key2']
 }));
 
-app.get('/', function(req, res, next) {
-    // Update views
-    req.session.views = (req.session.views || 0) + 1
-
-    // Write response
-    res.end(req.session.views + ' views')
-});
-
-
 let urlDatabase = {
     "b2xVn2": {
         fullURL: "http://www.lighthouselabs.ca",
@@ -56,8 +47,10 @@ let users = {
 
 //if not logged in, go to login
 app.get("/", (req, res) => {
-    if (req.session.user_id !== undefined) {
+    if (req.session.user_id == undefined) {
         res.redirect("/login");
+    } else {
+        res.redirect("/urls");
     }
 });
 
@@ -95,7 +88,7 @@ app.post("/login", (req, res) => {
         error: "Please enter a proper login/password."
     });
 });
-
+//get a user_id and password and create a user cookie
 app.post("/login/success", (req, res) => {
     for (let i of Object.keys(users)) {
         if (req.body.email === users[i].email && bcrypt.compareSync(req.body.password, users[i].password) === true) {
@@ -104,9 +97,13 @@ app.post("/login/success", (req, res) => {
             res.redirect("/urls");
         }
     }
-    res.render("login", {
-        error: "Error 403: Incorrect email/password."
-    });
+    if (req.session.user_id) {
+        req.session.user_id = i;
+        res.redirect("/urls");
+    } else {
+
+        res.send("Error 403: Incorrect email/password.");
+    }
 });
 //renders page that includes email/password form
 app.get("/register", (req, res) => {
@@ -154,11 +151,10 @@ app.get("/urls_new", (req, res) => {
         users: users
     }
 
-    if (req.session.user_id === undefined) {
-        res.redirect("/login", templateVars);
-    } else {
-        res.render("urls_new", templateVars)
+    if (req.session.user_id !== undefined) {
+        return res.render("urls_new", templateVars);
     }
+    return res.redirect('/urls/login');
 });
 //recieves cookies and redirects
 app.post("/logout", (req, res) => {
@@ -169,7 +165,7 @@ app.post("/logout", (req, res) => {
     req.session = null;
     res.redirect("/urls");
 });
-
+// route to urlshortenedURL page to edit
 app.get("/u/:shortURL", (req, res) => {
 
     let longURL = urlDatabase[req.params.shortURL];
