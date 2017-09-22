@@ -34,17 +34,15 @@ let urlDatabase = {
 let users = {
     "asX412": {
         id: "userRandomID",
-        email: "bsrai91@gmail.com",
-        password: bcrypt.hashSync("12345", 10)
+        email: "tinyapp@washard.com",
+        password: bcrypt.hashSync("easypassword", 10)
     },
     "asdf452": {
         id: "user2RandomID",
         email: "user2@example.com",
-        password: bcrypt.hashSync("purple-monkey-dinosaur", 10)
+        password: bcrypt.hashSync("hardpassword", 10)
     }
 };
-
-
 //if not logged in, go to login
 app.get("/", (req, res) => {
     if (req.session.user_id == undefined) {
@@ -101,7 +99,6 @@ app.post("/login/success", (req, res) => {
         req.session.user_id = i;
         res.redirect("/urls");
     } else {
-
         res.send("Error 403: Incorrect email/password.");
     }
 });
@@ -141,7 +138,6 @@ app.post("/register", (req, res) => {
     }
     res.redirect("/urls");
 });
-
 //shows URLs page, if you are logged in. If not, go to shown urls
 app.get("/urls_new", (req, res) => {
     let templateVars = {
@@ -154,7 +150,7 @@ app.get("/urls_new", (req, res) => {
     if (req.session.user_id !== undefined) {
         return res.render("urls_new", templateVars);
     }
-    return res.redirect('/urls/login');
+    return res.send('Please login before shortening links.');
 });
 //recieves cookies and redirects
 app.post("/logout", (req, res) => {
@@ -168,11 +164,11 @@ app.post("/logout", (req, res) => {
 // route to urlshortenedURL page to edit
 app.get("/u/:shortURL", (req, res) => {
 
-    let longURL = urlDatabase[req.params.shortURL];
+    let longURL = urlDatabase[req.params.shortURL].fullURL;
     res.redirect(longURL);
 });
 //redirects to URL whith short ID
-app.post("/urls/:id", (req, res) => { //redirects to URL whith short ID
+app.post("/urls/:id", (req, res) => { //redirects to URL with short ID
     let templateVars = {
         urls: urlDatabase,
         shortURL: req.params.id,
@@ -187,7 +183,7 @@ app.post("/urls/:id/update", (req, res) => {
         urlDatabase[req.params.id].fullURL = req.body.longURL;
         res.redirect("/urls");
     } else {
-        res.redirect("/urls");
+        res.status(403).send('Incorrect User.');
     }
 });
 //returns a generated shortURL
