@@ -1,19 +1,19 @@
 //ALL THE REQUIRED LIBS
-var express = require("express");
-var cookieParser = require('cookie-parser');
-var app = express();
-app.use(cookieParser());
-var cookieSession = require('cookie-session')
-const bcrypt = require('bcrypt');
-var PORT = process.env.PORT || 8080;
+const express = require("express");
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session')
+const app = express();
+const PORT = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
+const bcrypt = require('bcrypt');
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(cookieParser());
+
+let current_user = null; //checks for user login
 
 app.set("view engine", "ejs"); //sets engine to ejs
-var current_user = null; //checks for user login
-
 app.set('trust proxy', 1) // trust first proxy
 app.use(cookieSession({
     name: 'session',
@@ -28,7 +28,8 @@ app.get('/', function(req, res, next) {
     res.end(req.session.views + ' views')
 });
 
-var urlDatabase = {
+
+let urlDatabase = {
     "b2xVn2": {
         fullURL: "http://www.lighthouselabs.ca",
         poster: "asX412"
@@ -39,17 +40,20 @@ var urlDatabase = {
     }
 };
 
-const users = {
-    "userRandomID": {
-        email: "user@example.com",
-        password: bcrypt.hashSync("hardpassword", 10)
+let users = {
+    "asX412": {
+        id: "userRandomID",
+        email: "bsrai91@gmail.com",
+        password: bcrypt.hashSync("12345", 10)
     },
-    "user2RandomID": {
-        savedURLs: [],
+    "asdf452": {
+        id: "user2RandomID",
         email: "user2@example.com",
-        password: bcrypt.hashSync("easypassword", 10)
+        password: bcrypt.hashSync("purple-monkey-dinosaur", 10)
     }
 };
+
+
 //if not logged in, go to login
 app.get("/", (req, res) => {
     if (req.session.user_id !== undefined) {
@@ -61,7 +65,7 @@ app.get("/login", (req, res) => {
     let templateVars = {
         urls: urlDatabase,
         shortURL: req.params.id,
-        email: req.session.email,
+        user_id: req.session.user_id,
         users: users
     }
     res.render("login", templateVars);
@@ -93,7 +97,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/login/success", (req, res) => {
-    for (var i of Object.keys(users)) {
+    for (let i of Object.keys(users)) {
         if (req.body.email === users[i].email && bcrypt.compareSync(req.body.password, users[i].password) === true) {
             current_user = users[i].email;
             req.session.user_id = i;
@@ -106,12 +110,12 @@ app.post("/login/success", (req, res) => {
 });
 //renders page that includes email/password form
 app.get("/register", (req, res) => {
-    var user_id = req.body.email;
-    var userPass = req.body.password;
+    let user_id = req.body.email;
+    let userPass = req.body.password;
     let templateVars = {
         urls: urlDatabase,
         shortURL: req.params.id,
-        email: req.session.email,
+        user_id: req.session.user_id,
         users: users
     };
     res.render("register", templateVars);
@@ -120,29 +124,27 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
     const password = req.body.password;
     const hashedPassword = bcrypt.hashSync(password, 10);
-    var user_id = req.body.email;
-    var userPass = req.body.password;
-    var uString = generateRandomString();
+    let user_id = req.body.email;
+    let userPass = req.body.password;
+    let uString = generateRandomString();
     if (user_id == false || userPass == false) { //checks for no input
         res.send("Error 400: Please enter a valid user_id/password.")
     }
-    for (var keys of Object.keys(users)) { //checks for existing email
+    for (let keys of Object.keys(users)) { //checks for existing email
         if (user_id === users[keys].email) {
-            current_user = user[keys].email;
-            res.send('Error 400: Please enter a non-existing email.')
-        } else {
-            users[uString] = {
-                savedURLs: [],
-                id: uString,
-                email: user_id,
-                password: hashedPassword,
-                users: users
-            };
-        }
-    };
-    req.session.user = uString;
+            current_user = users[keys].email;
+            return res.send('Error 400: Please enter a non-existing email.')
+        };
+    }
+    req.session.user_id = uString
+    users[uString] = {
+        id: uString,
+        email: user_id,
+        password: hashedPassword,
+    }
     res.redirect("/urls");
 });
+
 //shows URLs page, if you are logged in. If not, go to shown urls
 app.get("/urls_new", (req, res) => {
     let templateVars = {
@@ -151,6 +153,7 @@ app.get("/urls_new", (req, res) => {
         poster: req.session.user_id,
         users: users
     }
+
     if (req.session.user_id === undefined) {
         res.redirect("/login", templateVars);
     } else {
@@ -164,8 +167,9 @@ app.post("/logout", (req, res) => {
     }
     current_user = null;
     req.session = null;
-    res.redirect("/register");
+    res.redirect("/urls");
 });
+
 app.get("/u/:shortURL", (req, res) => {
 
     let longURL = urlDatabase[req.params.shortURL];
@@ -227,10 +231,10 @@ app.listen(PORT, () => {
 });
 //picks a random number from 0-1, multiplies it by possible.length to get a number from ~0-possible.length
 function generateRandomString() {
-    var arr = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let arr = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for (var i = 0; i < 6; i++) {
+    for (let i = 0; i < 6; i++) {
         arr += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return arr;
